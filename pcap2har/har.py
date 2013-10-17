@@ -69,7 +69,7 @@ def HTTPResponseJsonRepr(self):
         'cookies': [],
         'headersSize': self.msg.headers_size,
         'bodySize': self.raw_body_length,
-        'redirectURL': self.msg.headers['location'] if 'location' in self.msg.headers else '',
+        'redirectURL': self.msg.get_header('location') or '',
         'headers': header_json_repr(self.msg.headers),
         'content': content,
     }

@@ -21,15 +21,16 @@ class Page(object):
         self.referrers = set()
         self.startedDateTime = entry.startedDateTime
         self.last_entry = entry
-        self.user_agent = entry.request.msg.headers.get('user-agent')
+        self.user_agent = entry.request.msg.get_header('user-agent')
         # url, title, etc.
         if is_root_document(entry):
             self.root_document = entry
         else:
             # if this is a hanging referrer
-            if 'referer' in entry.request.msg.headers:
+            referrer = entry.request.msg.get_header('referer')
+            if referrer:
                 # save it so other entries w/ the same referrer will come here
-                self.referrers.add(entry.request.msg.headers['referer'])
+                self.referrers.add(referrer)
         self.url = entry.request.url
         self.title = self.url
 
@@ -100,8 +101,8 @@ class PageTracker(object):
         '''
         # extract interesting information all at once
         req = entry.request  # all the interesting stuff is in the request
-        referrer = req.msg.headers.get('referer')
-        user_agent = req.msg.headers.get('user-agent')
+        referrer = req.msg.get_header('referer')
+        user_agent = req.msg.get_header('user-agent')
         matched_page = None  # page we added the request to
         # look through pages for matches
         for page in self.pages:

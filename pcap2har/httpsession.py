@@ -147,8 +147,9 @@ class HttpSession(object):
         for msg in pairs:
             entry = Entry(msg.request, msg.response)
             # if msg.request has a user-agent, add it to our list
-            if 'user-agent' in msg.request.msg.headers:
-                self.user_agents.add(msg.request.msg.headers['user-agent'])
+            user_agent = msg.request.msg.get_header('user-agent')
+            if user_agent:
+                self.user_agents.add(user_agent)
             # if msg.request has a referer, keep track of that, too
             if self.page_tracker:
                 entry.pageref = self.page_tracker.getref(entry)

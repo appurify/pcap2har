@@ -19,7 +19,7 @@ class Request(Message):
         super(Request, self).__init__(tcpdir, pointer, dpkt.http.Request)
         # get query string. its the URL after the first '?'
         uri = urlparse.urlparse(self.msg.uri)
-        self.host = self.msg.headers['host'] if 'host' in self.msg.headers else ''
+        self.host = self.msg.get_header('host') or ''
         fullurl = urlparse.ParseResult('http', self.host, uri.path, uri.params, uri.query, uri.fragment)
         self.fullurl = fullurl.geturl()
         self.url, frag = urlparse.urldefrag(self.fullurl)

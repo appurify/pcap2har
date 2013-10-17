@@ -44,8 +44,9 @@ class Response(Message):
     def __init__(self, tcpdir, pointer):
         super(Response, self).__init__(tcpdir, pointer, dpkt.http.Response)
         # get mime type
-        if 'content-type' in self.msg.headers:
-            self.mediaType = MediaType(self.msg.headers['content-type'])
+        content_type = self.msg.get_header('content-type')
+        if content_type:
+            self.mediaType = MediaType(content_type)
         else:
             self.mediaType = MediaType('application/x-unknown-content-type')
         self.mimeType = self.mediaType.mimeType()
@@ -79,8 +80,9 @@ class Response(Message):
         the name of the compresson type.
         '''
         # if content-encoding is found
-        if 'content-encoding' in self.msg.headers:
-            encoding = self.msg.headers['content-encoding'].lower()
+        encoding = self.msg.get_header('content-encoding')
+        if encoding:
+            encoding = encoding.lower()
             self.compression = encoding
             # handle gzip
             if encoding == 'gzip' or encoding == 'x-gzip':
